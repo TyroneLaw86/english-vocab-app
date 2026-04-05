@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<meta name="theme-color" content="#1a1a2e">
+<title>AI Dev English - 42天词汇</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{--bg:#0d0d1a;--s:#151528;--s2:#1e1e38;--bd:#2a2a4a;--ac:#6c63ff;--g:#00d4aa;--p:#ff6b9d;--o:#ffa726;--tx:#e8e8f0;--tx2:#8888aa;--tx3:#555577;--nh:64px;--sb:env(safe-area-inset-bottom,0px)}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Inter','Noto Sans SC',sans-serif;font-size:14px;background:var(--bg);color:var(--tx);line-height:1.5}
+#app{display:flex;flex-direction:column;height:100%;height:100dvh}
+#topbar{flex-shrink:0;height:56px;display:flex;align-items:center;justify-content:space-between;padding:0 16px;background:rgba(13,13,26,.95);backdrop-filter:blur(12px);border-bottom:1px solid var(--bd);z-index:10}
+.ttl{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px}
+.ttl .em{font-size:20px}
+.badge{background:var(--ac);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;letter-spacing:.5px}
+.streak{display:flex;align-items:center;gap:4px;background:var(--s2);border:1px solid var(--bd);border-radius:20px;padding:4px 10px;font-size:12px;font-weight:600;color:var(--o)}
+#screens{flex:1;overflow:hidden;position:relative}
+.screen{position:absolute;inset:0;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;padding:16px 16px calc(var(--nh) + var(--sb) + 12px);display:none}
+.screen.active{display:flex;flex-direction:column;gap:14px}
+#nav{position:fixed;bottom:0;left:0;right:0;height:calc(var(--nh) + var(--sb));padding-bottom:var(--sb);background:rgba(13,13,26,.97);backdrop-filter:blur(20px);border-top:1px solid var(--bd);display:flex;align-items:center;z-index:100}
+.nav{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0;cursor:pointer;color:var(--tx3);transition:color .2s;-webkit-tap-highlight-color:transparent;border:none;background:none;font-family:inherit}
+.nav.on{color:var(--ac)}
+.nav.on .ni{transform:scale(1.1)}
+.ni{font-size:22px;transition:transform .2s}
+.nl{font-size:10px;font-weight:600}
+.card{background:var(--s);border:1px solid var(--bd);border-radius:16px;padding:16px}
+.hero{background:linear-gradient(135deg,#1a1a3a,#0d1a2e);border:1px solid #2a2a5a;border-radius:20px;padding:20px}
+.hero-g{font-size:12px;color:var(--ac);font-weight:600;margin-bottom:6px;letter-spacing:1.5px}
+.hero-t{font-size:21px;font-weight:800;line-height:1.35;margin-bottom:4px}
+.hero-s{font-size:13px;color:var(--tx2);margin-bottom:16px}
+.prg{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.prg-ring{position:relative;width:70px;height:70px;flex-shrink:0}
+.prg-ring svg{transform:rotate(-90deg)}
+.prg-ring circle{fill:none;stroke-width:6}
+.prg-ring .bg{stroke:var(--bd)}
+.prg-ring .fg{stroke:var(--ac);stroke-linecap:round;transition:stroke-dashoffset .6s ease}
+.prg-ring .pct{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.prg-ring .pn{font-size:18px;font-weight:800;color:var(--ac);line-height:1}
+.prg-ring .pl{font-size:8px;color:var(--tx3)}
+.pi{flex:1}
+.pi h3{font-size:14px;font-weight:700;margin-bottom:8px}
+.stats{display:flex;flex-direction:column;gap:6px}
+.stat{display:flex;align-items:center;justify-content:space-between;font-size:12px}
+.stat .l{color:var(--tx2)}
+.stat .v{font-weight:700}
+.stat .v.g{color:var(--g)}
+.stat .v.p{color:var(--ac)}
+.actions{display:flex;gap:8px}
+.btn{flex:1;background:var(--ac);color:#fff;border:none;border-radius:12px;padding:11px;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px;transition:all .2s;-webkit-tap-highlight-color:transparent}
+.btn:active{transform:scale(.97);opacity:.9}
+.btn.s{background:var(--s2);color:var(--tx);border:1px solid var(--bd)}
+.sl{font-size:11px;font-weight:700;color:var(--tx3);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:8px}
+.wg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.wd{aspect-ratio:1;border-radius:50%;display:flex;flex-direction:column;align-items:center;justify-content:center;font-size:9px;font-weight:700;cursor:pointer;border:2px solid transparent;transition:all .2s}
+.wd.done{background:var(--ac);color:#fff}
+.wd.today{background:var(--g);color:#000;border-color:#fff}
+.wd.future{background:var(--s2);color:var(--tx3)}
+.dp{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:4px 0}
+.dp::-webkit-scrollbar{display:none}
+.dt{flex-shrink:0;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:var(--s);color:var(--tx2);transition:all .2s;font-family:inherit;white-space:nowrap}
+.dt.on{background:var(--ac);border-color:var(--ac);color:#fff}
+.wb{background:linear-gradient(135deg,var(--ac),#9b59b6);border-radius:16px;padding:14px 16px;display:flex;align-items:center;gap:12px}
+.wb .em{font-size:26px}
+.wb .ti{flex:1}
+.wb .ti h3{font-size:14px;font-weight:800}
+.wb .ti p{font-size:12px;opacity:.85}
+.wb .dy{text-align:center}
+.wb .dy .n{font-size:22px;font-weight:800;color:rgba(255,255,255,.95)}
+.wb .dy .d{font-size:10px;opacity:.7}
+.vd{display:flex;flex-direction:column;gap:8px}
+.vw{background:var(--s);border:1px solid var(--bd);border-radius:14px;padding:14px}
+.vr{display:flex;align-items:flex-start;gap:12px}
+.vn{width:26px;height:26px;background:var(--s2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--tx2);flex-shrink:0}
+.vb{flex:1;min-width:0}
+.vb .en{font-size:15px;font-weight:800;word-break:break-all}
+.vb .ph{font-size:11px;color:var(--g);margin:2px 0}
+.vb .cn{font-size:12px;color:var(--tx2)}
+.vb .df{font-size:11px;color:var(--tx);font-style:italic;margin-top:3px;min-height:14px}
+.vb .ex{font-size:10px;color:var(--tx2);margin-top:5px;padding:5px 8px;background:rgba(108,99,255,.07);border-left:3px solid var(--ac);border-radius:0 6px 6px 0;white-space:pre-wrap;word-break:break-all;line-height:1.4}
+.va{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.vb2{flex:1;min-width:55px;padding:6px;border-radius:8px;border:none;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:3px}
+.vb2.tts{background:rgba(108,99,255,.15);color:var(--ac)}
+.vb2.rc{background:rgba(0,212,170,.12);color:var(--g)}
+.vb2.lrn{border:1.5px solid var(--g);color:var(--g);background:rgba(0,212,170,.05)}
+.vb2.ld{border:1.5px solid var(--ac);color:var(--ac);background:rgba(108,99,255,.08)}
+.qc{background:var(--s);border:1px solid var(--bd);border-radius:20px;padding:24px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:12px}
+.qw{font-size:26px;font-weight:800}
+.qp{font-size:13px;color:var(--g)}
+.qq{font-size:12px;color:var(--tx2)}
+.qo{padding:11px 15px;border-radius:12px;border:1.5px solid var(--bd);background:var(--s2);font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;text-align:left;color:var(--tx);width:100%;transition:all .15s}
+.qo:active{transform:scale(.98)}
+.qo.correct{border-color:var(--g);background:rgba(0,212,170,.12);color:var(--g)}
+.qo.wrong{border-color:var(--p);background:rgba(255,107,157,.12);color:var(--p)}
+.qo.disabled{opacity:.35;cursor:not-allowed}
+.ri{background:var(--s);border:1px solid var(--bd);border-radius:20px;padding:24px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px}
+.rb{width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;font-size:26px;background:linear-gradient(135deg,var(--p),#ff4081);color:#fff;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.rb:active{transform:scale(.9)}
+.rb.recording{animation:rp 1.2s infinite}
+@keyframes rp{0%,100%{box-shadow:0 0 0 0 rgba(255,107,157,.5)}50%{box-shadow:0 0 0 14px rgba(255,107,157,0)}}
+.rb2{width:44px;height:44px;border-radius:50%;background:var(--g);border:none;color:#000;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s}
+.rb2:active{transform:scale(.9)}
+.rw{font-size:26px;font-weight:800}
+.rp{font-size:13px;color:var(--g)}
+.rh{font-size:11px;color:var(--tx2)}
+.ch{display:flex;align-items:center;gap:12px;padding:12px 16px;background:var(--s);border-radius:14px;border:1px solid var(--bd)}
+.ch .av{width:44px;height:44px;background:linear-gradient(135deg,var(--ac),#9b59b6);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.ch h3{font-size:14px;font-weight:700}
+.ch p{font-size:11px;color:var(--g)}
+#msgs{flex:1;display:flex;flex-direction:column;gap:10px;min-height:0;overflow-y:auto}
+.mg{display:flex;gap:8px;animation:mi .3s ease}
+@keyframes mi{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.mg.user{flex-direction:row-reverse}
+.ma{width:30px;height:30px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:15px}
+.mg.ai .ma{background:linear-gradient(135deg,var(--ac),#9b59b6)}
+.mg.user .ma{background:var(--g)}
+.mb{max-width:76%;padding:10px 13px;border-radius:16px;font-size:13px;line-height:1.5;white-space:pre-wrap;word-break:break-word}
+.mg.ai .mb{background:var(--s2);border:1px solid var(--bd);border-radius:4px 16px 16px 16px}
+.mg.user .mb{background:var(--ac);border-radius:16px 4px 16px 16px;color:#fff}
+#input-area{position:fixed;bottom:calc(var(--nh) + var(--sb));left:0;right:0;background:rgba(13,13,26,.97);backdrop-filter:blur(20px);padding:8px 16px;padding-bottom:calc(8px + var(--sb));border-top:1px solid var(--bd);display:flex;gap:8px;align-items:flex-end;z-index:99}
+#txt{flex:1;background:var(--s2);border:1px solid var(--bd);border-radius:24px;padding:10px 16px;font-size:14px;color:var(--tx);font-family:inherit;resize:none;max-height:120px;outline:none;line-height:1.4}
+#txt:focus{border-color:var(--ac)}
+#snd{width:44px;height:44px;border-radius:50%;background:var(--ac);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .2s;flex-shrink:0}
+#snd:active{transform:scale(.9)}
+#snd:disabled{opacity:.35;cursor:not-allowed}
+#api-ntc{background:rgba(255,167,38,.12);border:1px solid rgba(255,167,38,.3);border-radius:10px;padding:10px 12px;font-size:12px;color:var(--o);display:flex;align-items:center;gap:8px}
+.sc{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.sc::-webkit-scrollbar{display:none}
+.st{flex-shrink:0;padding:7px 14px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1.5px solid var(--bd);background:var(--s);color:var(--tx2);transition:all .2s;font-family:inherit;white-space:nowrap}
+.st.on{background:var(--g);border-color:var(--g);color:#000}
+.se{background:var(--s);border:1px solid var(--bd);border-radius:16px;padding:16px}
+.se h3{font-size:15px;font-weight:800;margin-bottom:4px}
+.se p{font-size:12px;color:var(--tx2);margin-bottom:14px}
+.ss{display:flex;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.ss:last-child{border-bottom:none}
+.sn{width:26px;height:26px;background:rgba(108,99,255,.15);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--ac);flex-shrink:0}
+.sb{flex:1}
+.sb h4{font-size:13px;font-weight:700;margin-bottom:3px}
+.sb p{font-size:11px;color:var(--tx2);margin-bottom:5px;line-height:1.5}
+.sb pre{background:#0a0a1a;border-radius:8px;padding:7px 10px;font-size:11px;color:var(--g);font-family:'Courier New',monospace;overflow-x:auto;white-space:pre;margin-top:5px}
+.sb .phrase{background:rgba(0,212,170,.1);border:1px solid rgba(0,212,170,.2);border-radius:8px;padding:7px 10px;font-size:11px;color:var(--g);margin-top:5px;font-style:italic}
+.tg{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.tm{background:var(--s);border:1.5px solid var(--bd);border-radius:16px;padding:14px 10px;cursor:pointer;text-align:center;transition:all .2s}
+.tm:active{transform:scale(.97)}
+.tm .ic{font-size:26px;margin-bottom:6px}
+.tm .nm{font-size:12px;font-weight:700;margin-bottom:3px}
+.tm .dc{font-size:10px;color:var(--tx2);line-height:1.4}
+::-webkit-scrollbar{width:0;height:0}
+.overlay{position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:200;display:none;align-items:flex-end;justify-content:center}
+.overlay.on{display:flex}
+.modal{background:var(--s);border-radius:20px 20px 0 0;padding:24px 20px;width:100%;max-width:480px;animation:su .3s ease}
+@keyframes su{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.mh{width:40px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 16px}
+.mt{font-size:18px;font-weight:800;margin-bottom:16px;text-align:center}
+.ki{width:100%;background:var(--s2);border:1.5px solid var(--bd);border-radius:12px;padding:12px 14px;font-size:13px;color:var(--tx);font-family:inherit;outline:none;margin-bottom:12px}
+.ki:focus{border-color:var(--ac)}
+.sk{width:100%;background:var(--ac);color:#fff;border:none;border-radius:12px;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit}
+.ki2{margin-top:12px;background:rgba(108,99,255,.1);border-radius:10px;padding:10px 12px;font-size:11px;color:var(--tx2);line-height:1.6}
+</style>
+
+<body>
+<div id="app">
+<div id="screens">
+<div id="homeScr" class="screen active">
+      <div class="card hero">
+        <div class="hero-g">AI Dev English</div>
+        <div class="hero-t">42天编程英语<br>学习挑战</div>
+        <div class="hero-s">从零开始，编程+英语双提升</div>
+        <div class="prg">
+          <div class="prg-ring">
+            <svg width="70" height="70" viewBox="0 0 70 70">
+              <circle class="bg" cx="35" cy="35" r="28"/>
+              <circle class="fg" id="pg" cx="35" cy="35" r="28"
+                stroke-dasharray="175.9" stroke-dashoffset="175.9"/>
+            </svg>
+            <div class="pct" style="position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center">
+              <span class="pn" id="pp">0%</span>
+              <span class="pl">完成</span>
+            </div>
+          </div>
+          <div class="pi">
+            <h3>你的学习进度</h3>
+            <div class="stats">
+              <div class="stat"><span class="l">当前阶段</span><span class="v" id="pw">Week 1 · Python 基础</span></div>
+              <div class="stat"><span class="l">学习天数</span><span class="v p" id="ld">1 / 42 天</span></div>
+              <div class="stat"><span class="l">今日词汇</span><span class="v" id="twc">0个</span></div>
+              <div class="stat"><span class="l">已掌握</span><span class="v g" id="mc">0个</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="actions">
+          <button class="btn" onclick="sd(st.day&lt;42?st.day+1:42)">继续学习 →</button>
+          <button class="btn s" onclick="nav('vocab')">查看词汇 →</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="sl">学习日历</div>
+        <div class="wg" id="wg"></div>
+      </div>
+
+      <div class="card">
+        <div class="sl">今日预览（前3词）</div>
+        <div id="tp"></div>
+      </div>
+    </div>
+
+    <div id="vocabScr" class="screen">
+      <div style="display:flex;align-items:center;gap:12px;padding:0 0 12px">
+        <button class="btn s" onclick="nav('home')" style="flex:none;padding:8px 14px">← 返回</button>
+        <div style="display:flex;align-items:center;gap:8px;flex:1">
+          <span id="wbEm" style="font-size:20px">⭐</span>
+          <div>
+            <div id="wbN" style="font-weight:700;font-size:14px">Week 1</div>
+            <div id="wbT" style="font-size:11px;color:var(--tx2)"></div>
+          </div>
+          <div id="wbD" style="margin-left:auto;font-weight:800;font-size:22px"></div>
+        </div>
+      </div>
+      <div class="dp" id="dp"></div>
+      <div id="vd"></div>
+      <div id="rc"></div>
+    </div>
+
+    <div id="practiceScr" class="screen">
+      <div style="padding:0 0 12px;display:flex;align-items:center;gap:12px">
+        <button class="btn s" onclick="nav('home')" style="flex:none;padding:8px 14px">← 返回</button>
+        <div style="font-weight:700;font-size:16px">词汇练习</div>
+      </div>
+      <div id="qz"></div>
+    </div>
+
+    <div id="sceneScr" class="screen">
+      <div style="padding:0 0 12px;display:flex;align-items:center;gap:12px">
+        <button class="btn s" onclick="nav('home')" style="flex:none;padding:8px 14px">← 返回</button>
+        <div style="font-weight:700;font-size:16px">真实场景</div>
+      </div>
+      <div class="sc" id="sct"></div>
+      <div class="se" id="scc"></div>
+    </div>
+
+    <div id="chatScr" class="screen">
+      <div style="padding:0 0 12px;display:flex;align-items:center;gap:12px">
+        <button class="btn s" onclick="nav('home')" style="flex:none;padding:8px 14px">← 返回</button>
+        <div style="font-weight:700;font-size:16px" id="ctl">AI 对话</div>
+        <button class="btn s" onclick="showModal()" style="flex:none;padding:8px 14px;margin-left:auto">🔑 API Key</button>
+      </div>
+      <div id="api-ntc" class="api-ntc" style="margin-bottom:12px">
+        <span>⚠️</span>
+        <span style="flex:1">需要设置 OpenAI API Key 才能使用 AI 对话（免费 $5）</span>
+        <button class="btn" onclick="showModal()" style="flex:none;padding:6px 12px;font-size:12px">设置</button>
+      </div>
+      <div id="msgs" style="flex:1;min-height:0"></div>
+      <div id="input-area" style="position:static;background:transparent;border:none;padding:8px 0 0;display:flex;gap:8px">
+        <textarea id="txt" rows="2" placeholder="用英语提问或练习..." style="flex:1;resize:none;border-radius:24px;background:var(--s2);border:1px solid var(--bd);color:var(--tx);padding:10px 16px;font-size:14px;font-family:inherit;outline:none;line-height:1.4"></textarea>
+        <button id="snd" onclick="send()" style="width:44px;height:44px;border-radius:50%;background:var(--ac);border:none;color:#fff;font-size:18px;cursor:pointer;display:flex;align-items:center;justify-content:center;flex-shrink:0">↑</button>
+      </div>
+    </div>
+</div>
+<nav id="nav">
+<button class="nav on" data-nav="home" onclick="nav('home')">
+      <span class="ni">🏠</span><span class="nl">首页</span>
+    </button>
+    <button class="nav" data-nav="vocab" onclick="nav('vocab')">
+      <span class="ni">📖</span><span class="nl">词汇</span>
+    </button>
+    <button class="nav" data-nav="practice" onclick="nav('practice')">
+      <span class="ni">🎯</span><span class="nl">练习</span>
+    </button>
+    <button class="nav" data-nav="scene" onclick="nav('scene')">
+      <span class="ni">💻</span><span class="nl">场景</span>
+    </button>
+    <button class="nav" data-nav="chat" onclick="startChat()">
+      <span class="ni">🤖</span><span class="nl">AI对话</span>
+    </button>
+</nav>
+</div>
+<div class="overlay" id="ov">
+  <div class="modal">
+    <div style="width:40px;height:4px;background:var(--bd);border-radius:2px;margin:0 auto 16px"></div>
+    <div class="mt">设置 API Key</div>
+    <p style="font-size:12px;color:var(--tx2);margin-bottom:16px;text-align:center">
+      使用 OpenAI API Key（免费 $5额度）<br>
+      获取地址：<a href="https://platform.openai.com" target="_blank" style="color:var(--ac)">platform.openai.com</a>
+    </p>
+    <input id="ki" class="ki" placeholder="sk-..." type="password">
+    <button class="btn" onclick="saveKey()" style="margin-bottom:12px">保存</button>
+    <button class="btn s" onclick="$('ov').classList.remove('on')" style="width:100%">取消</button>
+  </div>
+</div>
+<script>
+const V=[[1, "install", "/ɪnˈstɔːl/", "安装", "To set up software on a computer", ""], [1, "download", "/ˌdaʊnˈloʊd/", "下载", "To copy data from the internet to your device", ""], [1, "run", "/rʌn/", "运行；执行", "To start or execute a program", ""], [1, "execute", "/ˈeksɪkjuːt/", "执行", "To carry out a program or command", ""], [1, "environment", "/ɪnˈvaɪrənmənt/", "环境", "The setup where your code runs", ""], [1, "software", "/ˈsɔːftwer/", "软件", "Programs and applications", ""], [1, "download", "/ˌdaʊnˈloʊd/", "下载", "To copy data from the internet to your device", ""], [1, "setup", "/ˈsetʌp/", "设置；安装", "The process of preparing something to use", ""], [2, "account", "/əˈkaʊnt/", "账户", "A personal profile on a website or service", ""], [2, "profile", "/ˈproʊfaɪl/", "个人资料", "Your personal page with your information", ""], [2, "repository", "/rɪˈpɒzətɔːri/", "代码仓库", "A place where code is stored and managed", ""], [2, "interface", "/ˈɪntəfeɪs/", "界面", "The visual part of a program you interact with", ""], [2, "settings", "/ˈsetɪŋz/", "设置", "Options to customize how something works", ""], [2, "appearance", "/əˈpɪərəns/", "外观", "How something looks visually", ""], [2, "language", "/ˈlæŋɡwɪdʒ/", "语言", "A system for communication (human or programming)", ""], [2, "register", "/ˈredʒɪstər/", "注册", "To sign up for a new account", ""], [3, "markdown", "/ˈmɑːrkdaʊn/", "标记语言", "A lightweight language for formatting text", ""], [3, "format", "/ˈfɔːrmæt/", "格式化；格式", "The way text is structured or styled", ""], [3, "heading", "/ˈhedɪŋ/", "标题", "A title or subject line in a document", ""], [3, "bold", "/boʊld/", "粗体", "Text that is thicker and darker", ""], [3, "italic", "/ɪˈtælɪk/", "斜体", "Text that slants to the right", ""], [3, "link", "/lɪŋk/", "链接", "A clickable reference to another page or resource", ""], [3, "image", "/ˈɪmɪdʒ/", "图片", "A picture or graphic", ""], [3, "list", "/lɪst/", "列表", "A series of items written one after another", ""], [3, "code", "/koʊd/", "代码", "Instructions written for a computer", ""], [3, "block", "/blɑk/", "块；代码块", "A section of text or code grouped together", ""], [4, "configure", "/kənˈfɪɡjər/", "配置", "To set up or adjust settings", ""], [4, "command", "/kəˈmænd/", "命令", "An instruction you type into a terminal", ""], [4, "terminal", "/ˈtɜːrmɪnəl/", "终端", "A text-based interface to control your computer", ""], [4, "username", "/ˈjuːzərneɪm/", "用户名", "The name you use to identify yourself", ""], [4, "email", "/ˈiːmeɪl/", "邮箱", "Electronic mail address", ""], [4, "global", "/ˈɡloʊbəl/", "全局", "Affecting everything, not just one project", ""], [4, "version", "/ˈvɜːrʒən/", "版本", "A specific release of a piece of software", ""], [4, "path", "/pæθ/", "路径", "The location of a file or folder on your computer", ""], [5, "initialize", "/ɪˈnɪʃəlaɪz/", "初始化", "To set up or prepare for the first time", ""], [5, "commit", "/kəˈmɪt/", "提交", "To save changes with a message describing them", ""], [5, "message", "/ˈmesɪdʒ/", "消息；说明", "A written description of what changed", ""], [5, "add", "/æd/", "添加", "To put something into a collection", ""], [5, "stage", "/steɪdʒ/", "暂存", "To mark files to be included in the next commit", ""], [5, "track", "/træk/", "追踪", "To monitor changes to files", ""], [5, "directory", "/dəˈrektəri/", "目录；文件夹", "A folder on your computer", ""], [5, "working directory", "/ˈwɜːrkɪŋ dəˈrektəri/", "工作目录", "The folder where you are currently working", ""], [6, "remote", "/rɪˈmɑːt/", "远程仓库", "A version of your repo stored on another server", ""], [6, "origin", "/ˈɔːrɪdʒɪn/", "起源（默认远程名）", "The default name for the main remote server", ""], [6, "push", "/pʊʃ/", "推送", "To upload your local commits to a remote server", ""], [6, "pull", "/pʊl/", "拉取", "To download changes from a remote server", ""], [6, "upload", "/ˈʌploʊd/", "上传", "To send data from your computer to somewhere else", ""], [6, "download", "/ˌdaʊnˈloʊd/", "下载", "To copy data from the internet to your device", ""], [6, "branch", "/bræntʃ/", "分支", "A separate line of development", ""], [6, "master / main", "/ˈmæstər / meɪn/", "主分支", "The main line of development in a repo", ""], [7, "review", "/rɪˈvjuː/", "复习；回顾", "To look over and study again", ""], [7, "document", "/ˈdɑkjəmənt/", "文档", "A file containing written information", ""], [7, "documentation", "/ˌdɑkjəmenˈteɪʃən/", "文档（总称）", "Written instructions and explanations", ""], [7, "organize", "/ˈɔːrɡənaɪz/", "整理；组织", "To arrange things in a structured way", ""], [7, "summary", "/ˈsʌməri/", "总结", "A brief description of the main points", ""], [8, "open source", "/ˈoʊpən sɔːrs/", "开源", "Software whose code is publicly available", ""], [8, "search", "/sɜːrtʃ/", "搜索", "To look for something specific", ""], [8, "filter", "/ˈfɪltər/", "筛选；过滤器", "To narrow down results by certain criteria", ""], [8, "sort", "/sɔːrt/", "排序", "To arrange items in a particular order", ""], [8, "result", "/rɪˈzʌlt/", "结果", "The output or answer from a search or action", ""], [8, "awesome", "/ˈɔːsəm/", "极好的（俚语）", "Amazing, impressive, excellent", ""], [8, "community", "/kəˈmjuːnəti/", "社区", "A group of people with shared interests", ""], [8, "collaborate", "/kəˈlæbəreɪt/", "合作", "To work together on a shared project", ""], [9, "beginner", "/bɪˈɡɪnər/", "初学者", "Someone who is just starting to learn", ""], [9, "friendly", "/ˈfrendli/", "友好的", "Easy to use or welcoming", ""], [9, "label", "/ˈleɪbəl/", "标签", "A tag used to categorize or describe something", ""], [9, "issue", "/ˈɪʃuː/", "问题；议题", "A reported bug, question, or task in a project", ""], [9, "bug", "/bʌɡ/", "缺陷；漏洞", "An error or flaw in code", ""], [9, "feature", "/ˈfiːtʃər/", "功能；特性", "A specific capability of a program", ""], [9, "star", "/stɑːr/", "收藏（GitHub）", "A way to bookmark and show appreciation", ""], [9, "fork", "/fɔːrk/", "复刻", "To copy a repo to your own account", ""], [10, "readme", "/ˈriːdmiː/", "自述文件", "A file that introduces and explains a project", ""], [10, "introduction", "/ˌɪntrəˈdʌkʃən/", "介绍；导言", "A beginning explanation of something", ""], [10, "installation", "/ˌɪnstəˈleɪʃən/", "安装步骤", "How to set up the software", ""], [10, "requirement", "/rɪˈkwaɪərmənt/", "依赖要求", "Something that must be satisfied first", ""], [10, "prerequisite", "/ˌpriːˈdrɪzɪkwɪt/", "前置条件", "Something that must be done or known first", ""], [10, "usage", "/ˈjuːsɪdʒ/", "使用方法", "Instructions on how to use something", ""], [10, "example", "/ɪɡˈzæmpəl/", "示例；例子", "A sample that shows how something works", ""], [10, "description", "/dɪˈskrɪpʃən/", "描述；说明", "A written explanation of what something is", ""], [11, "clone", "/kloʊn/", "克隆；复制", "To copy a remote repo to your local computer", ""], [11, "local", "/ˈloʊkəl/", "本地的", "On your own computer (not on a server)", ""], [11, "remote", "/rɪˈmɑːt/", "远程的", "On a server or the internet (opposite of local)", ""], [11, "URL", "/ˌjuːɑːrˈel/", "网址链接", "The address of a web page", ""], [11, "copy", "/ˈkɑːpi/", "复制", "To create a duplicate of something", ""], [11, "paste", "/peɪst/", "粘贴", "To insert copied text or data somewhere", ""], [11, "clipboard", "/ˈklɪpbɔːrd/", "剪贴板", "A temporary storage area for copied data", ""], [11, "folder", "/ˈfoʊldər/", "文件夹", "A container for storing files on your computer", ""], [12, "structure", "/ˈstrʌktʃər/", "结构", "The way parts are organized", ""], [12, "source", "/sɔːrs/", "源代码", "The original code of a program", ""], [12, "source code", "/sɔːrs koʊd/", "源代码", "The human-readable code of a program", ""], [12, "src", "/sɔːrs/", "源代码目录", "Short for \"source\" — the source code folder", ""], [12, "directory", "/dəˈrektəri/", "目录", "A folder in a file system", ""], [12, "file", "/faɪl/", "文件", "A document stored on a computer", ""], [12, "root", "/ruːt/", "根目录", "The top-level folder of a project", ""], [12, "test", "/test/", "测试", "A check to make sure code works correctly", ""], [12, "test", "/test/", "测试（用例）", "A piece of code that checks another piece of code", ""], [12, "dependencies", "/dɪˈpendənsiz/", "依赖包", "External packages that a project needs to run", ""], [12, "configuration", "/kənˌfɪɡjəˈreɪʃən/", "配置文件", "A file that contains settings for a program", ""], [13, "report", "/rɪˈpɔːrt/", "报告；反馈", "To tell someone about a problem or issue", ""], [13, "suggestion", "/səɡˈdʒestʃən/", "建议", "An idea or recommendation", ""], [13, "maintainer", "/meɪnˈteɪnər/", "维护者", "The person responsible for a project", ""], [13, "assign", "/əˈsaɪn/", "分配；指派", "To give someone a task or issue to work on", ""], [13, "comment", "/ˈkɒment/", "评论；注释", "A note or reply in a discussion", ""], [13, "description", "/dɪˈskrɪpʃən/", "描述", "A written explanation", ""], [13, "environment", "/ɪnˈvaɪrənmənt/", "环境", "The setup where code runs (can also mean OS/dev setup)", ""], [13, "reproduce", "/ˌriːprəˈduːs/", "复现", "To make a bug happen again", ""], [13, "expected", "/ɪkˈspektɪd/", "预期的", "What should happen (vs. what actually happens)", ""], [13, "actual", "/ˈæktʃuəl/", "实际的", "What really happens", ""], [14, "bookmark", "/ˈbʊkmɑːrk/", "收藏；书签", "To save a link for later use", ""], [14, "favorite", "/ˈfeɪvərɪt/", "收藏的；最喜欢的", "Something you like a lot", ""], [14, "collect", "/kəˈlekt/", "收集", "To gather things together", ""], [14, "resource", "/ˈriːsɔːrs/", "资源", "Materials, tools, or information that help you learn", ""], [14, "organize", "/ˈɔːrɡənaɪz/", "整理", "To arrange things in an orderly way", ""], [14, "archive", "/ˈɑːrkaɪv/", "存档；归档", "To store something for safekeeping", ""], [14, "summarize", "/ˈsʌməraɪz/", "总结", "To state the main points briefly", ""], [15, "API", "/ˌeɪ piː ˈaɪ/", "应用程序接口", "A way for programs to communicate with each other", ""], [15, "application", "/ˌæplɪˈkeɪʃən/", "应用程序", "A software program", ""], [15, "model", "/ˈmɑːdəl/", "模型", "An AI system trained on data to perform tasks", ""], [15, "request", "/rɪˈkwest/", "请求", "A message asking for something from an API", ""], [15, "response", "/rɪˈspɑːns/", "响应", "The answer returned by an API", ""], [15, "endpoint", "/ˈendpɔɪnt/", "端点", "A specific URL where an API can be accessed", ""], [15, "key", "/kiː/", "密钥", "A secret string that authenticates your API access", ""], [15, "parameter", "/pəˈræmɪtər/", "参数", "A value you pass to a function or API", ""], [15, "authentication", "/ɔːˌθentɪˈkeɪʃən/", "认证", "The process of proving your identity", ""], [15, "generate", "/ˈdʒenəreɪt/", "生成", "To create something new", ""], [16, "function", "/ˈfʌŋkʃən/", "函数", "A reusable block of code that performs a specific task", ""], [16, "return", "/rɪˈtɜːrn/", "返回", "To send back a result from a function", ""], [16, "argument", "/ˈɑːrɡjəmənt/", "参数；实参", "A value passed to a function when calling it", ""], [16, "import", "/ɪmˈpɔːrt/", "导入", "To bring a module or library into your code", ""], [16, "module", "/ˈmɑːdʒuːl/", "模块", "A file containing Python code", ""], [16, "library", "/ˈlaɪbrəri/", "库", "A collection of reusable code", ""], [16, "debug", "/diːˈbʌɡ/", "调试", "To find and fix errors in code", ""], [16, "error", "/ˈerər/", "错误", "Something wrong in your code or program", ""], [16, "debug", "/diːˈbʌɡ/", "调试", "To find and fix errors in code", ""], [16, "variable", "/ˈveriəbəl/", "变量", "A named container that stores data", ""], [17, "prompt", "/prɑːmpt/", "提示词", "Instructions given to an AI model", ""], [17, "prompt engineering", "/prɑːmpt ˌendʒɪˈnɪrɪŋ/", "提示词工程", "The art of writing effective prompts for AI", ""], [17, "instruction", "/ɪnˈstrʌkʃən/", "指令；说明", "A direction telling AI what to do", ""], [17, "context", "/ˈkɑːntekst/", "上下文", "Background information provided to AI", ""], [17, "output", "/ˈaʊtpʊt/", "输出", "The result produced by a program or AI", ""], [17, "input", "/ˈɪnpʊt/", "输入", "The data or information given to a program", ""], [17, "temperature", "/ˈtemprətʃər/", "温度参数", "Controls how creative or random the AI response is", ""], [17, "token", "/ˈtoʊkən/", "令牌；词元", "A unit of text processed by an AI model", ""], [17, "limit", "/ˈlɪmɪt/", "限制", "A maximum or minimum boundary", ""], [17, "system message", "/ˈsɪstəm ˈmesɪdʒ/", "系统消息", "Instructions that set the AI's role or behavior", ""], [18, "few-shot", "/fjuː ʃɒt/", "少样本", "Providing a few examples in the prompt", ""], [18, "zero-shot", "/ˈzɪəroʊ ʃɒt/", "零样本", "Asking AI to do something with no examples", ""], [18, "chain of thought", "/tʃeɪn əv θɔːt/", "思维链", "A prompting technique where AI explains reasoning", ""], [18, "constrain", "/kənˈstreɪn/", "约束；限制", "To restrict or limit the output", ""], [18, "format", "/ˈfɔːrmæt/", "格式", "The structure or layout of output", ""], [18, "delimiter", "/ˈdelɪmɪtər/", "分隔符", "A character that separates parts of text", ""], [18, "example", "/ɪɡˈzæmpəl/", "示例", "A sample input and output to show AI the pattern", ""], [18, "refine", "/rɪˈfaɪn/", "优化；精炼", "To make something better through small changes", ""], [18, "iterate", "/ˈɪtəreɪt/", "迭代", "To repeat a process with improvements each time", ""], [18, "evaluate", "/ɪˈvæljueɪt/", "评估", "To judge the quality of something", ""], [19, "explain", "/ɪkˈspleɪn/", "解释", "To make something clear and understandable", ""], [19, "refactor", "/riːˈfæktər/", "重构", "To restructure code without changing its behavior", ""], [19, "optimize", "/ˈɑːptɪmaɪz/", "优化", "To make code faster or more efficient", ""], [19, "logic", "/ˈlɑːdʒɪk/", "逻辑", "The reasoning part of code", ""], [19, "implement", "/ˈɪmplɪment/", "实现", "To put a plan or design into code", ""], [19, "syntax", "/ˈsɪntæks/", "语法", "The rules for writing code in a language", ""], [19, "semantics", "/sɪˈmæntɪks/", "语义", "The meaning behind code (vs. syntax = the form)", ""], [19, "readable", "/ˈriːdəbəl/", "可读性强的", "Easy to understand", ""], [19, "trace", "/treɪs/", "追踪；跟踪", "To follow the flow of execution", ""], [19, "decompose", "/ˌdiːkəmˈpoʊz/", "分解", "To break a complex problem into smaller parts", ""], [19, "algorithm", "/ˈælɡərɪðəm/", "算法", "A step-by-step procedure for solving a problem", ""], [20, "discussion", "/dɪˈskʌʃən/", "讨论", "An exchange of ideas on a topic", ""], [20, "discussion", "/dɪˈskʌʃən/", "讨论", "An exchange of ideas on a topic", ""], [20, "resolution", "/ˌrezəˈluːʃən/", "解决方案", "A way of solving a problem", ""], [20, "duplicate", "/ˈduːplɪkət/", "重复的", "Something that already exists", ""], [20, "confirm", "/kənˈfɜːrm/", "确认", "To verify that something is true or correct", ""], [20, "priority", "/praɪˈɔːrəti/", "优先级", "The order of importance", ""], [20, "milestone", "/ˈmaɪlstoʊn/", "里程碑", "A significant stage or achievement", ""], [20, "label", "/ˈleɪbəl/", "标签", "A tag to categorize issues or PRs", ""], [20, "milestone", "/ˈmaɪlstoʊn/", "里程碑", "A significant stage or achievement", ""], [20, "scope", "/skoʊp/", "范围", "The extent or boundaries of a project or task", ""], [21, "summarize", "/ˈsʌməraɪz/", "总结", "To state the main points briefly", ""], [21, "report", "/rɪˈpɔːrt/", "报告", "A written account of what happened", ""], [21, "achievement", "/əˈtʃiːvmənt/", "成就", "Something you have accomplished", ""], [21, "challenge", "/ˈtʃælɪndʒ/", "挑战", "A difficult task that requires effort", ""], [21, "improve", "/ɪmˈpruːv/", "改进", "To make something better", ""], [21, "goal", "/ɡoʊl/", "目标", "Something you want to achieve", ""], [21, "reflect", "/rɪˈflekt/", "反思", "To think carefully about your experience", ""], [21, "progress", "/ˈprɑːɡres/", "进步", "Forward movement or improvement", ""], [22, "contribute", "/ˈkɒntrɪbjuːt/", "贡献", "To add value to a project", ""], [22, "contributor", "/kənˈtrɪbjʊtər/", "贡献者", "A person who contributes to a project", ""], [22, "active", "/ˈæktɪv/", "活跃的", "Frequently updated and maintained", ""], [22, "maintain", "/meɪnˈteɪn/", "维护", "To keep a project running and updated", ""], [22, "license", "/ˈlaɪsəns/", "开源协议", "The legal rules for how code can be used", ""], [22, "permission", "/pərˈmɪʃən/", "许可；权限", "The right to do something", ""], [22, "popular", "/ˈpɒpjʊlər/", "流行的；受欢迎的", "Liked by many people", ""], [22, "well-documented", "/wel ˈdɑkjəmentɪd/", "文档完善的", "Having good documentation", ""], [22, "community-driven", "/kəˈmjuːnəti drɪvn/", "社区驱动的", "Developed and maintained by the community", ""], [23, "guideline", "/ˈɡaɪdlaɪn/", "指南", "A set of rules or suggestions to follow", ""], [23, "contribution guide", "/ˌkɒntrɪˈbjuːʃən ɡaɪd/", "贡献指南", "Instructions for how to contribute to a project", ""], [23, "convention", "/kənˈvenʃən/", "惯例；规范", "A standard way of doing things", ""], [23, "standard", "/ˈstændərd/", "标准", "An accepted level of quality or norm", ""], [23, "code style", "/koʊd staɪl/", "代码风格", "The formatting rules for writing code", ""], [23, "lint", "/lɪnt/", "代码检查", "A tool that checks code for style and errors", ""], [23, "style guide", "/staɪl ɡaɪd/", "风格指南", "A document describing how to format code", ""], [23, "contributing", "/kənˈtrɪbjuːtɪŋ/", "贡献中（文件名）", "A file named CONTRIBUTING.md in a repo", ""], [24, "edit", "/ˈedɪt/", "编辑；修改", "To make changes to a file", ""], [24, "typo", "/ˈtaɪpoʊ/", "拼写错误", "A small spelling mistake", ""], [24, "correction", "/kəˈrekʃən/", "修正", "A change that fixes an error", ""], [24, "modify", "/ˈmɑːdɪfaɪ/", "修改", "To make changes to something", ""], [24, "change", "/tʃeɪndʒ/", "更改", "To make something different", ""], [24, "diff", "/dɪf/", "差异对比", "The difference between two versions of code", ""], [24, "snapshot", "/ˈsnæpʃɑːt/", "快照", "A record of the current state at one point in time", ""], [24, "revert", "/rɪˈvɜːrt/", "回滚；撤销", "To go back to a previous version", ""], [24, "amend", "/əˈmend/", "修正", "To make changes to a commit message or file", ""], [25, "pull request", "/pʊl rɪˈkwest/", "拉取请求", "A request to merge your changes into the main project", ""], [25, "merge", "/mɜːrdʒ/", "合并", "To combine two sets of changes together", ""], [25, "review", "/rɪˈvjuː/", "审核", "To examine code changes carefully", ""], [25, "request", "/rɪˈkwest/", "请求", "To ask for something", ""], [25, "compare", "/kəmˈper/", "对比", "To look at differences between two things", ""], [25, "base", "/beɪs/", "基准分支", "The branch you want to merge into", ""], [25, "head", "/hed/", "头部分支", "The branch that contains your changes", ""], [25, "conflict", "/ˈkɒnflɪkt/", "冲突", "When two branches have incompatible changes", ""], [25, "resolve", "/rɪˈzɑːlv/", "解决", "To fix or settle a problem", ""], [25, "approve", "/əˈpruːv/", "批准", "To officially agree to something", ""], [26, "feedback", "/ˈfiːdbæk/", "反馈；意见", "Comments or suggestions about your work", ""], [26, "suggest", "/səɡˈdʒest/", "建议", "To recommend a change", ""], [26, "address", "/əˈdres/", "回应；处理", "To respond to or deal with feedback", ""], [26, "nitpick", "/ˈnɪtpɪk/", "挑剔（小问题）", "A minor suggestion or small issue", ""], [26, "revise", "/rɪˈvaɪz/", "修改；修订", "To change something based on feedback", ""], [26, "rethink", "/riːˈθɪŋk/", "重新思考", "To think about something again and change your approach", ""], [26, "acknowledge", "/əkˈnɑːlɪdʒ/", "确认收到", "To recognize or accept feedback", ""], [26, "appreciate", "/əˈpriːʃieɪt/", "感谢；感激", "To be grateful for something", ""], [26, "helpful", "/ˈhelpfəl/", "有帮助的", "Providing useful assistance", ""], [26, "clarify", "/ˈklærɪfaɪ/", "澄清；说明", "To make something clearer", ""], [27, "question", "/ˈkwestʃən/", "问题", "Something you ask when you need help", ""], [27, "wonder", "/ˈwʌndər/", "想知道", "To be curious about something", ""], [27, "figure out", "/ˈfɪɡjər aʊt/", "弄清楚", "To discover or solve something", ""], [27, "troubleshoot", "/ˈtrʌbəlʃuːt/", "排查故障", "To find and fix problems", ""], [27, "troubleshoot", "/ˈtrʌbəlʃuːt/", "排查故障", "To find and fix problems", ""], [27, "investigate", "/ɪnˈvestɪɡeɪt/", "调查", "To examine something carefully", ""], [27, "context", "/ˈkɑːntekst/", "上下文", "Background information", ""], [27, "relevant", "/ˈreləvənt/", "相关的", "Connected to the topic at hand", ""], [27, "brief", "/briːf/", "简洁的", "Short and to the point", ""], [27, "specific", "/spəˈsɪfɪk/", "具体的", "Detailed and exact", ""], [27, "attach", "/əˈtætʃ/", "附上；附加", "To send a file along with a message", ""], [28, "first contribution", "/fɜːrst ˌkɒntrɪˈbjuːʃən/", "首次贡献", "The first time you contributed to open source", ""], [28, "collaborator", "/kəˈlæbəreɪtər/", "协作者", "A person who works together on a project", ""], [28, "community member", "/kəˈmjuːnəti ˈmembər/", "社区成员", "A participant in an open source community", ""], [28, "meaningful", "/ˈmiːnɪŋfəl/", "有意义的", "Having real importance or value", ""], [28, "confidence", "/ˈkɒnfɪdəns/", "信心", "The feeling of being sure of yourself", ""], [29, "build", "/bɪld/", "构建；搭建", "To create or construct something", ""], [29, "application", "/ˌæplɪˈkeɪʃən/", "应用", "A software program for a specific purpose", ""], [29, "deploy", "/dɪˈplɔɪ/", "部署", "To make a program available on the internet", ""], [29, "host", "/hoʊst/", "托管", "To store and serve a website or app", ""], [29, "cloud", "/klaʊd/", "云", "Internet-based computing services", ""], [29, "framework", "/ˈfreɪmwɜːrk/", "框架", "A foundation for building software", ""], [29, "interface", "/ˈɪntəfeɪs/", "界面", "The part of an app the user interacts with", ""], [29, "user interface", "/ˈjuːzər ˈɪntəfeɪs/", "用户界面", "The visual part of an app", ""], [29, "frontend", "/ˈfrʌntend/", "前端", "The visible part of a web app", ""], [29, "backend", "/ˈbækend/", "后端", "The server-side logic and data processing", ""], [29, "integrate", "/ˈɪntɪɡreɪt/", "集成", "To combine different systems or parts together", ""], [29, "integration", "/ˌɪntɪˈɡreɪʃən/", "集成", "The process of combining systems", ""], [29, "pipeline", "/ˈpaɪplaɪn/", "流水线", "A series of processing steps", ""], [31, "demonstrate", "/ˈdemənstreɪt/", "演示；展示", "To show how something works", ""], [31, "screenshot", "/ˈskriːnʃɒt/", "截图", "An image of what's shown on your screen", ""], [31, "preview", "/ˈpriːvjuː/", "预览", "A look at what something will look like", ""], [31, "live demo", "/laɪv ˈdiːmoʊ/", "线上演示", "A working version available on the internet", ""], [31, "tech stack", "/tek stæk/", "技术栈", "The set of technologies used in a project", ""], [31, "prerequisite", "/ˌpriːˈdrɪzɪkwɪt/", "前置要求", "What you need before starting", ""], [31, "key feature", "/kiː ˈfiːtʃər/", "核心功能", "The most important capability", ""], [31, "built with", "/bɪlt wɪð/", "使用…构建", "Made using a particular technology", ""], [31, "license", "/ˈlaɪsəns/", "开源协议", "Legal rules for how others can use your code", ""], [31, "version", "/ˈvɜːrʒən/", "版本", "A specific release of your project", ""], [32, "blog post", "/blɑːɡ poʊst/", "博客文章", "An article published on the internet", ""], [32, "publish", "/ˈpʌblɪʃ/", "发布", "To make something publicly available", ""], [32, "audience", "/ˈɔːdiəns/", "读者；受众", "The people who will read your content", ""], [32, "tutorial", "/tuːˈtɔːriəl/", "教程", "A lesson that teaches how to do something", ""], [32, "step-by-step", "/step baɪ step/", "一步一步地", "Doing something in a clear sequence", ""], [32, "walk through", "/wɔːk θruː/", "逐步讲解", "To explain something one part at a time", ""], [32, "case study", "/keɪs ˈstʌdi/", "案例分析", "A detailed examination of a specific example", ""], [32, "insight", "/ˈɪnsaɪt/", "见解", "A helpful understanding or idea", ""], [32, "lesson", "/ˈlesən/", "经验教训", "What you learn from experience", ""], [32, "share", "/ʃer/", "分享", "To let others see or use what you created", ""], [32, "engage", "/ɪnˈɡeɪdʒ/", "互动", "To get people interested and involved", ""], [33, "present", "/prɪˈzent/", "展示；介绍", "To show and explain your work to others", ""], [33, "introduction", "/ˌɪntrəˈdʌkʃən/", "介绍", "The beginning part of a presentation", ""], [33, "motivation", "/ˌmoʊtɪˈveɪʃən/", "动机；初衷", "The reason why you started something", ""], [33, "challenge", "/ˈtʃælɪndʒ/", "挑战", "A difficulty you had to overcome", ""], [33, "solution", "/səˈluːʃən/", "解决方案", "The way you solved a problem", ""], [33, "demo", "/ˈdiːmoʊ/", "演示", "A demonstration of how something works", ""], [33, "architecture", "/ˈɑːrkɪtektʃər/", "架构", "The overall design of a system", ""], [33, "scalability", "/ˌskeɪləˈbɪləti/", "可扩展性", "The ability to grow and handle more users", ""], [33, "limitation", "/ˌlɪmɪˈteɪʃən/", "局限性", "A restriction or weakness", ""], [33, "future work", "/ˈfjuːtʃər wɜːrk/", "未来工作", "Things you plan to do next", ""], [34, "technical", "/ˈteknɪkəl/", "技术性的", "Related to specialized knowledge", ""], [34, "writeup", "/ˈraɪtʌp/", "技术文章", "A written explanation of something technical", ""], [34, "document", "/ˈdɑkjəmənt/", "记录；文档化", "To write detailed information about something", ""], [34, "docstring", "/ˈdɑkstrɪŋ/", "文档字符串", "A comment in code that describes a function", ""], [34, "comment", "/ˈkɑːment/", "注释", "Notes in code for human readers", ""], [34, "convention", "/kənˈvenʃən/", "规范", "A generally accepted way of doing something", ""], [34, "refactor", "/riːˈfæktər/", "重构", "To restructure code without changing behavior", ""], [34, "clean code", "/kliːn koʊd/", "整洁代码", "Code that is easy to read and understand", ""], [34, "maintainable", "/ˈmeɪntənəbəl/", "可维护的", "Easy to update and modify", ""], [34, "technical debt", "/ˈteknɪkəl det/", "技术债务", "Problems in code that slow future development", ""], [35, "portfolio", "/pɔːrtˈfoʊlioʊ/", "作品集", "A collection of your best work", ""], [35, "showcase", "/ˈʃoʊkeɪs/", "展示", "To display your best work publicly", ""], [35, "showcase", "/ˈʃoʊkeɪs/", "展示", "To display your best work publicly", ""], [35, "public profile", "/ˈpʌblɪk ˈproʊfaɪl/", "公开资料", "Your visible GitHub profile page", ""], [36, "subscribe", "/səbˈskraɪb/", "订阅", "To sign up to receive regular updates", ""], [36, "newsletter", "/ˈnjuːzletər/", "电子简报", "A regular email with news and updates", ""], [36, "digest", "/ˈdaɪdʒest/", "摘要；文摘", "A condensed summary of information", ""], [36, "trending", "/ˈtrendɪŋ/", "热门趋势", "Popular or talked about right now", ""], [36, "engagement", "/ɪnˈɡeɪdʒmənt/", "互动量", "The level of interest and interaction", ""], [36, "share", "/ʃer/", "分享", "To let others see your content", ""], [36, "upvote", "/ˈʌpvoʊt/", "点赞", "To vote positively for something", ""], [36, "retweet", "/ˈriːtuːt/", "转发", "To share someone else's post", ""], [36, "follow", "/ˈfɑːloʊ/", "关注", "To subscribe to someone's updates", ""], [36, "notification", "/ˌnoʊtɪfɪˈkeɪʃən/", "通知", "A message alerting you of new activity", ""], [37, "article", "/ˈɑːrtɪkəl/", "文章", "A piece of written content", ""], [37, "headline", "/ˈhedlaɪn/", "标题；新闻标题", "The main title of an article", ""], [37, "skim", "/skɪm/", "略读", "To read quickly to get the main idea", ""], [37, "scan", "/skæn/", "扫描阅读", "To read quickly looking for specific information", ""], [37, "deep dive", "/diːp daɪv/", "深度研究", "A thorough examination of a topic", ""], [37, "thumbnail", "/ˈθʌmneɪl/", "缩略图", "A small preview image", ""], [37, "caption", "/ˈkæpʃən/", "说明文字", "A text description of an image or video", ""], [37, "abstract", "/ˈæbstrækt/", "摘要", "A brief summary of a research paper", ""], [38, "community", "/kəˈmjuːnəti/", "社区", "A group of people sharing common interests", ""], [38, "forum", "/ˈfɔːrəm/", "论坛", "An online platform for discussion", ""], [38, "thread", "/θred/", "帖子；话题", "A series of messages about one topic", ""], [38, "reply", "/rɪˈplaɪ/", "回复", "A response to someone's message", ""], [38, "upvote", "/ˈʌpvoʊt/", "赞同票", "A positive vote showing agreement", ""], [38, "helpful", "/ˈhelpfəl/", "有帮助的", "Providing useful assistance", ""], [38, "appreciate", "/əˈpriːʃieɪt/", "感谢", "To be grateful for something", ""], [38, "collaborate", "/kəˈlæbəreɪt/", "协作", "To work together", ""], [38, "networking", "/ˈnetwɜːrkɪŋ/", "社交；建立人脉", "Building professional relationships", ""], [38, "mentor", "/ˈmentɔːr/", "导师", "An experienced person who guides others", ""], [38, "mentee", "/ˈmentiː/", "受指导者", "A person being guided by a mentor", ""], [39, "interview", "/ˈɪntərvjuː/", "面试", "A formal meeting to evaluate a candidate", ""], [39, "candidate", "/ˈkændɪdeɪt/", "候选人", "A person applying for a position", ""], [39, "position", "/pəˈzɪʃən/", "职位", "A job or role", ""], [39, "technical interview", "/ˈteknɪkəl ˈɪntərvjuː/", "技术面试", "An interview testing your technical skills", ""], [39, "whiteboard", "/ˈwaɪtbɔːrd/", "白板面试", "Coding on a whiteboard during interview", ""], [39, "challenge", "/ˈtʃælɪndʒ/", "挑战；面试题", "A problem to solve during an interview", ""], [39, "leverage", "/ˈlevərɪdʒ/", "利用；发挥", "To use something to maximum advantage", ""], [39, "showcase", "/ˈʃoʊkeɪs/", "展示", "To display your abilities", ""], [39, "strength", "/streŋθ/", "优势", "A quality where you excel", ""], [39, "weakness", "/ˈwiːknəs/", "不足", "An area where you need improvement", ""], [39, "career path", "/kəˈrɪr pæθ/", "职业发展路径", "The direction of your professional growth", ""], [40, "specialize", "/ˈspeʃəlaɪz/", "专攻；专注于", "To focus on a specific area", ""], [40, "specialization", "/ˌspeʃəlɪˈzeɪʃən/", "专业方向", "A specific area of expertise", ""], [40, "field", "/fiːld/", "领域", "An area of study or work", ""], [40, "domain", "/dəˈmeɪn/", "领域；垂直行业", "A specific area of knowledge or application", ""], [40, "trending", "/ˈtrendɪŋ/", "热门趋势", "Currently popular or developing fast", ""], [40, "cutting-edge", "/ˈkʌtɪŋ edʒ/", "前沿的", "The most advanced or modern", ""], [40, "roadmap", "/ˈroʊdmæp/", "路线图", "A plan for achieving something over time", ""], [40, "milestone", "/ˈmaɪlstoʊn/", "里程碑", "A significant achievement along the way", ""], [40, "consistent", "/kənˈsɪstənt/", "持续的", "Happening regularly over time", ""], [40, "perseverance", "/ˌpɜːrsəˈvɪərəns/", "坚持不懈", "The ability to keep going despite difficulty", ""], [40, "compound", "/kəmˈpaʊnd/", "复利的", "Improving gradually over time (like compound interest)", ""], [41, "journey", "/ˈdʒɜːrni/", "旅程；历程", "A long process of personal change and growth", ""], [41, "transformation", "/ˌtrænsfərˈmeɪʃən/", "蜕变", "A dramatic change or improvement", ""], [41, "self-directed", "/ˌself dəˈrektɪd/", "自主驱动的", "Learning on your own without being told what to do", ""], [41, "initiative", "/ɪˈnɪʃətɪv/", "主动性", "The ability to act without being told to", ""], [41, "proactive", "/proʊˈæktɪv/", "积极主动的", "Taking action before being asked", ""], [41, "growth mindset", "/ɡroʊθ ˈmaɪndset/", "成长型思维", "Believing that you can improve through effort", ""], [41, "overcome", "/ˌoʊvərˈkʌm/", "克服", "To succeed in dealing with a difficulty", ""], [41, "pivot", "/ˈpɪvət/", "转型；调整方向", "To change direction or strategy", ""], [41, "iterative", "/ˈɪtəreɪtɪv/", "迭代的", "Done in repeated cycles of improvement", ""], [41, "sustainable", "/səˈsteɪnəbəl/", "可持续的", "Able to continue over the long term", ""], [41, "reflect", "/rɪˈflekt/", "反思", "To think deeply about your experiences", ""], [42, "long-term", "/ˌlɔːŋˈtɜːrm/", "长期的", "Happening over a long period of time", ""], [42, "short-term", "/ˌʃɔːrtˈtɜːrm/", "短期的", "Happening over a short period of time", ""], [42, "benchmark", "/ˈbentʃmɑːrk/", "基准", "A standard to measure against", ""], [42, "measurable", "/ˈmeʒərəbəl/", "可衡量的", "Able to be quantified or assessed", ""], [42, "accountability", "/əˌkaʊntəˈbɪləti/", "责任感", "The responsibility to complete something", ""], [42, "peer", "/pɪr/", "同伴", "A person of the same level or ability", ""], [42, "accountability partner", "/əˌkaʊntəˈbɪləti ˈpɑːrtnər/", "学习伙伴", "Someone who helps keep you on track", ""], [42, "stakeholder", "/ˈsteɪkhoʊldər/", "利益相关者", "A person with an interest in a project", ""], [42, "cross-functional", "/krɔːs ˈfʌŋkʃənəl/", "跨领域的", "Involving multiple areas or disciplines", ""], [42, "full-stack", "/fʊl stæk/", "全栈", "Covering both frontend and backend development", ""], [42, "continuous learning", "/kənˈtɪnjuəs ˈlɜːrnɪŋ/", "持续学习", "Never stopping the process of learning", ""]];
+
+const SC=['GitHub Issues','PR Description','Code Review','API Debug','Feature Request','AI Chatbot'];
+const SP=['I found a bug. Expected: saves data. Actual: lost on refresh.','I fixed a typo in README. Addresses issue #42. Please review!','Great work! Few nitpicks. Overall looks excellent!','I am getting a 401 error. Checked API key.','Suggest adding auto-save drafts. Users lose work.','Explain few-shot vs zero-shot prompting.'];
+const W=['Python 基础 + 英文环境热身','GitHub 深度 + 开源发现','AI API 调用 + Prompt 工程','开源贡献冲刺 + PR 实战','AI 应用作品集开发','习惯养成 + 长期规划'];
+const EMO=['#27ae60','#f39c12','#2980b9','#8e44ad','#c0392b','#2c3e50'];
+const ESC=function(s){return String(s).replace(/&/g,'&').replace(/</g,'<').replace(/>/g,'>')};
+const $=function(id){return document.getElementById(id)};
+var st={day:1,vDay:1,sIdx:0,msgs:[],typing:false};
+try{Object.assign(st,JSON.parse(localStorage.getItem('aidev')||'{}'))}catch(e){}
+function save(){localStorage.setItem('aidev',JSON.stringify(st))}
+function gw(d){return V.filter(function(v){return v[0]===d})}
+function gwk(d){return d<=7?0:d<=14?1:d<=21?2:d<=28?3:d<=35?4:5}
+function mastered(){return V.filter(function(v){return v[0]<=st.day&&localStorage.getItem('m_'+v[0]+'_'+v[1].replace(/\s/g,'_'))==='1'}).length}
+function lsp(k,v){if(v===undefined)return localStorage.getItem(k);localStorage.setItem(k,v==null?'':v)}
+
+function nav(id){
+  try{
+    var ss=document.querySelectorAll('.screen');
+    for(var i=0;i<ss.length;i++)ss[i].classList.remove('active');
+    var ns=document.querySelectorAll('.nav');
+    for(var i=0;i<ns.length;i++)ns[i].classList.remove('on');
+    var scr=document.getElementById(id+'Scr');
+    if(scr)scr.classList.add('active');
+    var nb=document.querySelector('[data-nav="'+id+'"]');
+    if(nb)nb.classList.add('on');
+    if(id==='vocab')rv(st.vDay);
+    if(id==='practice')rp();
+    if(id==='scene')rs(st.sIdx);
+    window.scrollTo(0,0)
+  }catch(e){console.error('nav error:',e)}
+}
+
+function rh(){
+  var tv=gw(st.day),ml=mastered(),pct=Math.round(st.day/42*100),wk=gwk(st.day);
+  var fg=document.getElementById('pg');
+  if(fg)fg.style.strokeDashoffset=175.9*(1-pct/100);
+  $('pp').textContent=pct+'%';
+  $('pw').textContent='Week '+(wk+1)+' · '+W[wk].split(' +')[0];
+  $('twc').textContent=tv.length+'个';
+  $('mc').textContent=ml+'个';
+  $('ld').textContent=st.day+' / 42 天';
+  var wg='';
+  for(var i=1;i<=42;i++){
+    var cls=i<st.day?'done':i===st.day?'today':'future';
+    var bg=EMO[gwk(i)];
+    var sty=cls!=='future'?'background:'+bg+';':'';
+    var mc=V.filter(function(x){return x[0]<i&&lsp('m_'+x[0]+'_'+x[1].replace(/\s/g,'_'))==='1'}).length;
+    var ttl=gw(i).length;
+    var p2=ttl>0?Math.round(mc/ttl*100):0;
+    wg+='<button class="wd '+cls+'" onclick="sd('+i+')" style="'+sty+'">'+i+'<div style="font-size:7px;opacity:.8">'+p2+'%</div></button>';
+  }
+  $('wg').innerHTML=wg;
+  var tp='';
+  tv.slice(0,3).forEach(function(v,i){
+    tp+='<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)"><div style="flex:1"><div style="font-weight:700">'+ESC(v[1])+'</div><div style="font-size:11px;color:var(--g)">'+ESC(v[2])+' · '+ESC(v[3])+'</div></div><button style="font-size:18px;background:none;border:none;cursor:pointer;color:var(--tx2)" onclick="speak(\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">🔊</button></div>';
+  });
+  if(!tv.length)tp='<div style="text-align:center;padding:20px 0;color:var(--tx3)">今天暂无词汇</div>';
+  $('tp').innerHTML=tp;
+}
+
+function sd(d){st.day=d;st.vDay=d;save();rh();nav('vocab')}
+
+function rv(day){
+  st.vDay=day;
+  var wk=gwk(day),tv=gw(day);
+  var ems=['⭐','🟡','🔵','🟣','🔴','⚫'];
+  var em=ems[wk]||'⭐';
+  $('wbEm').textContent=em;
+  $('wbN').textContent='Week '+(wk+1);
+  $('wbT').textContent=W[wk];
+  $('wbD').textContent=day;
+  var dp='';
+  for(var i=1;i<=42;i++)dp+='<button class="dt'+(i===day?' on':'')+'" onclick="rv('+i+')">'+i+'</button>';
+  $('dp').innerHTML=dp;
+  var vd='';
+  tv.forEach(function(v,i){
+    var k='m_'+v[0]+'_'+v[1].replace(/\s/g,'_');
+    var done=lsp(k)==='1';
+    vd+='<div class="card" style="padding:14px"><div style="display:flex;align-items:flex-start;gap:12px"><div class="vn">'+i+1+'</div><div style="flex:1"><div style="font-size:17px;font-weight:800">'+ESC(v[1])+'</div><div style="font-size:11px;color:var(--g);margin:2px 0">'+ESC(v[2])+'</div><div style="font-size:13px;color:var(--tx2);margin-bottom:4px">'+ESC(v[3])+'</div>';
+    if(v[4])vd+='<div style="font-size:12px;color:var(--tx);font-style:italic">'+ESC(v[4])+'</div>';
+    if(v[5])vd+='<div style="font-size:11px;color:var(--tx2);margin-top:4px;padding:5px 8px;background:rgba(108,99,255,.07);border-left:3px solid var(--ac);border-radius:0 6px 6px 0">'+ESC(v[5])+'</div>';
+    vd+='</div></div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="vb2 tts" onclick="speak(\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">🔊 发音</button><button class="vb2 rc" onclick="startRec(\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">🎤 跟读</button><button class="vb2'+(done?' lrn':' lrn')+'" onclick="toggleM('+v[0]+',\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">'+(done?'✅ 已掌握':'○ 标记掌握')+'</button></div></div>';
+  });
+  $('vd').innerHTML=vd;
+}
+
+function toggleM(day,word){
+  var k='m_'+day+'_'+word.replace(/\s/g,'_');
+  var v=lsp(k);
+  lsp(k,v==='1'?null:'1');
+  rv(st.vDay);
+  rh();
+}
+
+function speak(w){
+  if(!window.speechSynthesis)return;
+  var u=new SpeechSynthesisUtterance(w);
+  u.lang='en-US';u.rate=0.85;
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(u);
+}
+
+var mr=null,chunks=[];
+
+function startRec(word){
+  $('rc').innerHTML='<div class="card" style="padding:20px;text-align:center"><div class="rw">'+ESC(word)+'</div><button class="rb" id="recBtn" onclick="toggleRec(\''+word.replace(/'/g,"\\'")+'\')">🎤</button><div class="rh">点击开始跟读</div></div>';
+}
+
+async function toggleRec(word){
+  if(!mr){
+    try{
+      var s=await navigator.mediaDevices.getUserMedia({audio:true});
+      mr=new MediaRecorder(s);chunks=[];
+      mr.ondataavailable=function(e){chunks.push(e.data)};
+      mr.onstop=function(){
+        var b=new Blob(chunks,{type:'audio/webm'});
+        var u=URL.createObjectURL(b);
+        s.getTracks().forEach(function(t){t.stop()});
+        $('rc').innerHTML='<div class="card" style="padding:20px;text-align:center"><div class="rw">'+ESC(word)+'</div><audio src="'+u+'" controls style="width:100%;margin-bottom:12px"></audio><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" onclick="toggleM(st.vDay,\''+word.replace(/'/g,"\\'")+'\')">✅ 标记掌握</button><button class="btn s" onclick="startRec(\''+word.replace(/'/g,"\\'")+'\')">🔄 再录</button></div></div>';
+      };
+      mr.start();
+      document.getElementById('recBtn').textContent='⏹';
+      document.getElementById('recBtn').style.cssText='width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:var(--p);color:#fff;font-size:26px;animation:rp 1.2s infinite';
+    }catch(e){alert('麦克风权限被拒绝')}
+  }else if(mr.state==='recording'){
+    mr.stop();mr=null;toggleRec(word);
+  }else{startRec(word);}
+}
+
+function rp(){
+  var words=gw(st.vDay);
+  if(!words.length){$('qz').innerHTML='<div class="card" style="text-align:center;padding:40px 20px;color:var(--tx3)">先选择一个有词汇的学习日</div>';return;}
+  var q=words[Math.floor(Math.random()*words.length)];
+  var wrongs=words.filter(function(v){return v!==q}).sort(function(){return Math.random()-0.5}).slice(0,3);
+  var opts=[q].concat(wrongs).sort(function(){return Math.random()-0.5});
+  var html='<div class="card" style="text-align:center;padding:24px 20px"><div class="sl">选择英文单词</div><div style="font-size:24px;font-weight:800;margin:12px 0;color:var(--ac)">'+ESC(q[3])+'</div>';
+  opts.forEach(function(o){html+='<button class="qo" onclick="checkAns(this,\''+ESC(q[1]).replace(/'/g,"\\'")+'\','+(o[1]===q[1])+')" style="width:100%;padding:12px;margin:6px 0;border-radius:12px;border:1.5px solid var(--bd);background:var(--s2);font-size:13px;font-weight:600;cursor:pointer;color:var(--tx);font-family:inherit;text-align:left">'+ESC(o[1])+'</button>'});
+  html+='<div id="qres" style="margin-top:12px"></div></div>';
+  $('qz').innerHTML=html;
+}
+
+function checkAns(btn,correct,ok){
+  var qos=document.querySelectorAll('.qo');
+  for(var i=0;i<qos.length;i++)qos[i].disabled=true;
+  btn.style.borderColor=ok?'var(--g)':'var(--p)';
+  btn.style.background=ok?'rgba(0,212,170,.12)':'rgba(255,107,157,.12)';
+  if(!ok){var w=document.querySelector('.qo:not([style*="border-color: var(--g)"])');
+    if(w){w.style.borderColor='var(--g)';w.style.background='rgba(0,212,170,.12)'}}
+  $('qres').innerHTML=ok?'<span style="color:var(--g);font-weight:700">✅ 正确！</span>':'<span style="color:var(--p);font-weight:700">❌ 正确是：'+ESC(correct)+'</span> <button class="btn" onclick="rp()" style="margin-top:8px">下一题 →</button>';
+}
+
+function rs(idx){
+  st.sIdx=idx;
+  var sc=SC[idx],ph=SP[idx];
+  var tabs='';
+  SC.forEach(function(s,i){tabs+='<button class="st'+(i===idx?' on':'')+'" onclick="rs('+i+')">'+s+'</button>'});
+  $('sct').innerHTML=tabs;
+  var steps=[{t:'场景理解',d:'了解真实编程中的'+sc+'场景'},{t:'核心表达',d:ph},{t:'跟AI练习',d:'用英语进行'+sc+'练习'}];
+  var body='<h3 style="font-size:16px;font-weight:800;margin-bottom:8px">'+ESC(sc)+'</h3><p style="font-size:12px;color:var(--g);margin-bottom:14px">Topic: '+ESC(ph)+'</p>';
+  steps.forEach(function(s,i){
+    body+='<div class="ss"><div class="sn">'+(i+1)+'</div><div class="sb"><h4>'+ESC(s.t)+'</h4><p>'+ESC(s.d)+'</p></div></div>';
+  });
+  body+='<div class="ch" style="margin-top:12px;background:rgba(0,212,170,.1);border-color:rgba(0,212,170,.3)">💬 '+ESC(ph)+'</div>';
+  $('scc').innerHTML=body;
+  $('ctl').textContent=sc;
+}
+
+function showModal(){$('ov').classList.add('on');$('ki').focus()}
+function saveKey(){
+  var k=$('ki').value.trim();
+  if(k&&k.startsWith('sk-')){
+    localStorage.setItem('apikey',k);
+    $('ov').classList.remove('on');
+    $('api-ntc').style.display='none';
+    startChat();
+  }else{alert('请输入有效的 sk- 开头 API Key')}
+}
+
+function startChat(){
+  nav('chat');
+  if(!st.msgs||!st.msgs.length){
+    st.msgs=[{role:'assistant',content:'Hi! I am your AI tutor. Today we practice: '+SC[st.sIdx]+'. '+SP[st.sIdx]+' What would you like to say?'}];
+    renderMsgs();
+  }
+  if(!localStorage.getItem('apikey'))$('api-ntc').style.display='flex';
+}
+
+function renderMsgs(){
+  var html='';
+  for(var i=0;i<(st.msgs||[]).length;i++){
+    var m=st.msgs[i];
+    html+='<div class="mg '+(m.role==='user'?'user':'')+'"><div class="ma">'+(m.role==='ai'?'🤖':'😊')+'</div><div class="mb">'+ESC(m.content||m)+'</div></div>';
+  }
+  if(st.typing)html+='<div class="mg ai"><div class="ma">🤖</div><div class="mb">思考中...</div></div>';
+  $('msgs').innerHTML=html;
+  $('msgs').parentElement.scrollTop=1e9;
+}
+
+async function send(){
+  var txt=$('txt').value.trim();
+  if(!txt)return;
+  $('txt').value='';
+  st.msgs.push({role:'user',content:txt});
+  renderMsgs();
+  st.typing=true;renderMsgs();
+  var key=localStorage.getItem('apikey');
+  if(!key){st.msgs.push({role:'assistant',content:'Please set OpenAI API Key first (click the 🔑 button)'});st.typing=false;renderMsgs();return;}
+  try{
+    var res=await fetch('https://api.openai.com/v1/chat/completions',{
+      method:'POST',
+      headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},
+      body:JSON.stringify({model:'gpt-3.5-turbo',messages:[
+        {role:'system',content:'You are a friendly AI English tutor for a Chinese developer. Keep responses short (2-3 sentences). Correct grammar gently.'},
+        {role:'assistant',content:'Today we practice: '+SC[st.sIdx]+'. '+SP[st.sIdx]},
+        st.msgs[st.msgs.length-1]
+      ]})
+    });
+    var d=await res.json();
+    st.msgs.push({role:'assistant',content:d.choices[0].message.content});
+  }catch(e){st.msgs.push({role:'assistant',content:'Error: '+e.message})}
+  st.typing=false;save();renderMsgs();
+}
+
+$('txt').addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();send()}});
+
+document.addEventListener('DOMContentLoaded',function(){
+  if(!localStorage.getItem('apikey'))$('api-ntc').style.display='flex';
+  rh();
+});
+
+</script>
+
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('/sw.js').then(function(reg) {
+      console.log('SW registered:', reg.scope);
+    }).catch(function(err) {
+      console.log('SW registration failed:', err);
+    });
+  });
+}
+</script>
+</body>
+</html>
