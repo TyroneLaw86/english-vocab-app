@@ -394,31 +394,88 @@ function speak(w){
   window.speechSynthesis.speak(u);
 }
 
-var mr=null,chunks=[];
+var sr=null;
 
 function startRec(word){
-  $('rc').innerHTML='<div class="card" style="padding:20px;text-align:center"><div class="rw">'+ESC(word)+'</div><button class="rb" id="recBtn" onclick="toggleRec(\''+word.replace(/'/g,"\\'")+'\')">🎤</button><div class="rh">点击开始跟读</div></div>';
+  $('rc').innerHTML='<div class="card" style="padding:24px 20px;text-align:center;display:flex;flex-direction:column;align-items:center;gap:14px"><div class="rw">'+ESC(word)+'</div><button class="rb" id="recBtn" onclick="toggleRec(\''+word.replace(/'/g,"\\'")+'\')">&#x1F3A4;</button><div class="rh" id="rhint">点击开始跟读</div><div id="rresult" style="margin-top:8px;min-height:24px"></div><button class="btn" onclick="toggleM(st.vDay,\'\''+word.replace(/'/g,"\\'")+'\'\')" style="margin-top:4px">&#x2705; 标记掌握</button></div>';
 }
 
-async function toggleRec(word){
-  if(!mr){
-    try{
-      var s=await navigator.mediaDevices.getUserMedia({audio:true});
-      mr=new MediaRecorder(s);chunks=[];
-      mr.ondataavailable=function(e){chunks.push(e.data)};
-      mr.onstop=function(){
-        var b=new Blob(chunks,{type:'audio/webm'});
-        var u=URL.createObjectURL(b);
-        s.getTracks().forEach(function(t){t.stop()});
-        $('rc').innerHTML='<div class="card" style="padding:20px;text-align:center"><div class="rw">'+ESC(word)+'</div><audio src="'+u+'" controls style="width:100%;margin-bottom:12px"></audio><div style="display:flex;gap:8px;margin-top:8px"><button class="btn" onclick="toggleM(st.vDay,\''+word.replace(/'/g,"\\'")+'\')">✅ 标记掌握</button><button class="btn s" onclick="startRec(\''+word.replace(/'/g,"\\'")+'\')">🔄 再录</button></div></div>';
-      };
-      mr.start();
-      document.getElementById('recBtn').textContent='⏹';
-      document.getElementById('recBtn').style.cssText='width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:var(--p);color:#fff;font-size:26px;animation:rp 1.2s infinite';
-    }catch(e){alert('麦克风权限被拒绝')}
-  }else if(mr.state==='recording'){
-    mr.stop();mr=null;toggleRec(word);
-  }else{startRec(word);}
+function toggleRec(word){
+  if(!('webkitSpeechRecognition' in window) && !('SpeechRecognition' in window)){
+    $('rresult').innerHTML='<div style="color:var(--p);font-size:13px">当前浏览器不支持语音识别，请使用 Safari 或 Chrome</div>';
+    return;
+  }
+  if(sr && sr.recording){
+    sr.stop();
+    return;
+  }
+  var SR=window.SpeechRecognition || window.webkitSpeechRecognition;
+  sr=new SR();
+  sr.lang='en-US';
+  sr.interimResults=true;
+  sr.maxAlternatives=3;
+  sr.recording=true;
+  document.getElementById('recBtn').textContent='&#x23F9;';
+  document.getElementById('recBtn').style.cssText='width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:var(--p);color:#fff;font-size:26px;animation:rp 1.2s infinite';
+  document.getElementById('rhint').textContent='请朗读上方单词...';
+  document.getElementById('rresult').innerHTML='';
+  sr.onresult=function(e){
+    var results=Array.from(e.results).map(function(r){return r[0].transcript}).join('');
+    var alt=e.results[e.results.length-1];
+    if(alt.isFinal){
+      sr.recording=false;
+      var spoken=results.trim().toLowerCase();
+      var target=word.toLowerCase();
+      var score=similarity(spoken,target);
+      var stars=score>=0.8?'&#x1F31F;&#x1F31F;&#x1F31F;':score>=0.6?'&#x1F31F;&#x1F31F;':score>=0.4?'&#x1F31F;':'';
+      var col=score>=0.6?'var(--g)':score>=0.4?'var(--o)':'var(--p)';
+      var tip='';
+      if(score<0.4) tip='<div style="color:var(--tx2);font-size:11px;margin-top:4px">提示：注意单词发音，可点击上方 &#x1F3A4; 听标准发音</div>';
+      $('rresult').innerHTML='<div style="color:'+col+';font-size:14px;font-weight:700;margin:4px 0">"'+ESC(results)+'"</div>'+
+        '<div style="font-size:13px;color:var(--tx2);margin-bottom:4px">相似度: '+Math.round(score*100)+'% '+stars+'</div>'+tip;
+      document.getElementById('recBtn').textContent='&#x1F504;';
+      document.getElementById('recBtn').style.cssText='width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:var(--g);color:#000;font-size:18px;display:flex;align-items:center;justify-content:center';
+      document.getElementById('rhint').textContent='点击 &#x1F504; 重新跟读';
+    } else {
+      document.getElementById('rresult').innerHTML='<div style="color:var(--tx2);font-size:13px;font-style:italic">"'+ESC(results)+'"...</div>';
+    }
+  };
+  sr.onerror=function(e){
+    sr.recording=false;
+    document.getElementById('recBtn').textContent='&#x1F3A4;';
+    document.getElementById('recBtn').style.cssText='width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--p),#ff4081);color:#fff;display:flex;align-items:center;justify-content:center;font-size:26px;transition:all .2s';
+    document.getElementById('rhint').textContent='点击开始跟读';
+    if(e.error==='not-allowed'){
+      document.getElementById('rresult').innerHTML='<div style="color:var(--p);font-size:13px">请在浏览器设置中允许麦克风权限后重试</div>';
+    } else {
+      document.getElementById('rresult').innerHTML='<div style="color:var(--p);font-size:13px">识别出错: '+e.error+'，请重试</div>';
+    }
+  };
+  sr.onend=function(){
+    if(sr && !sr.recording){
+      document.getElementById('recBtn').textContent='&#x1F504;';
+      document.getElementById('recBtn').style.cssText='width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:var(--g);color:#000;font-size:18px;display:flex;align-items:center;justify-content:center';
+    }
+  };
+  sr.start();
+}
+
+function similarity(a,b){
+  if(a===b) return 1;
+  if(a.length===0||b.length===0) return 0;
+  var la=a.toLowerCase(),lb=b.toLowerCase();
+  if(la===lb) return 1;
+  if(la.includes(lb)||lb.includes(la)) return 0.7;
+  var al=la.length,bl=lb.length;
+  var dp=[];
+  for(var i=0;i<=al;i++) dp[i]=[i];
+  for(var j=0;j<=bl;j++) dp[0][j]=j;
+  for(var i=1;i<=al;i++){
+    for(var j=1;j<=bl;j++){
+      dp[i][j]=Math.min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+(la[i-1]===lb[j-1]?0:1));
+    }
+  }
+  return 1-dp[al][bl]/Math.max(al,bl);
 }
 
 function rp(){
