@@ -370,19 +370,30 @@ function rv(day){
   tv.forEach(function(v,i){
     var k='m_'+v[0]+'_'+v[1].replace(/\s/g,'_');
     var done=lsp(k)==='1';
-    vd+='<div class="card" style="padding:14px"><div style="display:flex;align-items:flex-start;gap:12px"><div class="vn">'+i+1+'</div><div style="flex:1"><div style="font-size:17px;font-weight:800">'+ESC(v[1])+'</div><div style="font-size:11px;color:var(--g);margin:2px 0">'+ESC(v[2])+'</div><div style="font-size:13px;color:var(--tx2);margin-bottom:4px">'+ESC(v[3])+'</div>';
+    vd+='<div class="card" style="padding:14px"><div style="display:flex;align-items:flex-start;gap:12px"><div class="vn">'+(i+1)+'</div><div style="flex:1"><div style="font-size:17px;font-weight:800">'+ESC(v[1])+'</div><div style="font-size:11px;color:var(--g);margin:2px 0">'+ESC(v[2])+'</div><div style="font-size:13px;color:var(--tx2);margin-bottom:4px">'+ESC(v[3])+'</div>';
     if(v[4])vd+='<div style="font-size:12px;color:var(--tx);font-style:italic">'+ESC(v[4])+'</div>';
     if(v[5])vd+='<div style="font-size:11px;color:var(--tx2);margin-top:4px;padding:5px 8px;background:rgba(108,99,255,.07);border-left:3px solid var(--ac);border-radius:0 6px 6px 0">'+ESC(v[5])+'</div>';
-    vd+='</div></div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="vb2 tts" onclick="speak(\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">🔊 发音</button><button class="vb2 rc" onclick="openRecPanel(\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">🎤 跟读</button><button class="vb2 '+(done?'ldn':'btn')+'" onclick="toggleM('+v[0]+',\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">'+(done?'✅ 已掌握':'○ 标记掌握')+'</button></div></div>';
+    vd+='</div></div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="vb2 tts" onclick="speak(\'\''+ESC(v[1]).replace(/\'/g,"\\'\'")+\'\'')">🔊 发音</button><button class="vb2 rc" onclick="openRecPanel(\'\''+ESC(v[1]).replace(/\'/g,"\\'\'")+\'\'')">🎤 跟读</button><button class="vb2 '+(done?'ldn':'btn')+'" onclick="toggleM(\'\''+v[0]+'\'',\'\''+ESC(v[1]).replace(/\'/g,"\\'\'")+'\'',this)">'+(done?'✅ 已掌握':'○ 标记掌握')+'</button></div></div>';
   });
   $('vd').innerHTML=vd;
 }
 
-function toggleM(day,word){
+function toggleM(day,word,btn){
   var k='m_'+day+'_'+word.replace(/\s/g,'_');
   var v=lsp(k);
-  lsp(k,v==='1'?null:'1');
-  rv(st.vDay);
+  var now='1';
+  lsp(k,v==='1'?null:now);
+  var isDone=lsp(k)===now;
+  // Update only the clicked button
+  if(btn){
+    if(isDone){
+      btn.innerHTML='✅ 已掌握';
+      btn.className='vb2 ldn';
+    } else {
+      btn.innerHTML='○ 标记掌握';
+      btn.className='vb2 btn';
+    }
+  }
   rh();
 }
 
@@ -409,11 +420,11 @@ function openRecPanel(word){
   }
   panel.innerHTML='<div style="font-size:16px;font-weight:800;color:var(--ac);margin-bottom:4px">跟读练习</div>'+
     '<div style="font-size:22px;font-weight:800">'+ESC(word)+'</div>'+
-    '<button id="recBtn" onclick="toggleRec(\''+word.replace(/\'/g,"\\\'")+'\')" style="width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--p),#ff4081);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .2s">&#x1F3A4;</button>'+
+    '<button id="recBtn" onclick="toggleRec(\''+word.replace(/\'/g,"\\\'")+'\')" style="width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--p),#ff4081);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .2s">🎤</button>'+
     '<div id="rhint" style="font-size:12px;color:var(--tx2)">点击开始跟读</div>'+
     '<div id="rresult" style="text-align:center;min-height:24px;width:100%"></div>'+
-    '<button class="btn" onclick="toggleM(st.vDay,\'\''+word.replace(/\'/g,"\\\'")+'\'\')" id="rMarkBtn" style="margin-top:4px">&#x25CB; 标记掌握</button>'+
-    '<button class="btn s" onclick="closeRecPanel()" style="width:100%;margin-top:4px">&#x274C; 关闭</button>';
+    '<button class="btn" onclick="toggleM(st.vDay,\'\''+word.replace(/\'/g,"\\'\'")+'\'',this)" id="rMarkBtn" style="margin-top:4px">○ 标记掌握</button>'+
+    '<button class="btn s" onclick="closeRecPanel()" style="width:100%;margin-top:4px">❌ 关闭</button>';
   panel.style.display='flex';
   panel.scrollIntoView({behavior:'smooth',block:'start'});
 }
@@ -443,7 +454,7 @@ function toggleRec(word){
   sr.interimResults=true;
   sr.maxAlternatives=3;
   sr.recording=true;
-  if(recBtn){recBtn.textContent='&#x23F9;';recBtn.style.cssText='width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:var(--p);color:#fff;font-size:26px;animation:rp 1.2s infinite';}
+  if(recBtn){recBtn.textContent='⏹';recBtn.style.cssText='width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:var(--p);color:#fff;font-size:26px;animation:rp 1.2s infinite';}
   if(rhint)rhint.textContent='请朗读上方单词...';
   if(rresult)rresult.innerHTML='';
   sr.onresult=function(e){
@@ -454,13 +465,13 @@ function toggleRec(word){
       var spoken=results.trim().toLowerCase();
       var target=word.toLowerCase();
       var score=similarity(spoken,target);
-      var stars=score>=0.8?'&#x1F31F;&#x1F31F;&#x1F31F;':score>=0.6?'&#x1F31F;&#x1F31F;':score>=0.4?'&#x1F31F;':'';
+      var stars=score>=0.8?'🌟🌟🌟':score>=0.6?'🌟🌟':score>=0.4?'🌟':'';
       var col=score>=0.6?'var(--g)':score>=0.4?'var(--o)':'var(--p)';
       var tip='';
-      if(score<0.4) tip='<div style="color:var(--tx2);font-size:11px;margin-top:4px">提示：注意发音，点击上方 &#x1F3A4; 听标准发音</div>';
+      if(score<0.4) tip='<div style="color:var(--tx2);font-size:11px;margin-top:4px">提示：注意发音，点击上方 🎤 听标准发音</div>';
       if(rresult) rresult.innerHTML='<div style="color:'+col+';font-size:14px;font-weight:700;margin:4px 0">"'+ESC(results)+'"</div>'+
         '<div style="font-size:13px;color:var(--tx2);margin-bottom:4px">相似度: '+Math.round(score*100)+'% '+stars+'</div>'+tip;
-      if(recBtn){recBtn.textContent='&#x1F504;';recBtn.style.cssText='width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:var(--g);color:#000;font-size:18px;display:flex;align-items:center;justify-content:center';}
+      if(recBtn){recBtn.textContent='🔄';recBtn.style.cssText='width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:var(--g);color:#000;font-size:18px;display:flex;align-items:center;justify-content:center';}
       if(rhint)rhint.textContent='点击重新跟读';
     } else {
       if(rresult) rresult.innerHTML='<div style="color:var(--tx2);font-size:13px;font-style:italic">"'+ESC(results)+'"...</div>';
@@ -468,7 +479,7 @@ function toggleRec(word){
   };
   sr.onerror=function(e){
     sr.recording=false;
-    if(recBtn){recBtn.textContent='&#x1F3A4;';recBtn.style.cssText='width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--p),#ff4081);color:#fff;font-size:26px';}
+    if(recBtn){recBtn.textContent='🎤';recBtn.style.cssText='width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--p),#ff4081);color:#fff;font-size:26px';}
     if(rhint)rhint.textContent='点击开始跟读';
     if(rresult){
       if(e.error==='not-allowed') rresult.innerHTML='<div style="color:var(--p);font-size:13px">请在浏览器设置中允许麦克风权限</div>';
@@ -476,7 +487,7 @@ function toggleRec(word){
     }
   };
   sr.onend=function(){
-    if(sr && !sr.recording && recBtn){recBtn.textContent='&#x1F504;';recBtn.style.cssText='width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:var(--g);color:#000;font-size:18px;display:flex;align-items:center;justify-content:center';}
+    if(sr && !sr.recording && recBtn){recBtn.textContent='🔄';recBtn.style.cssText='width:44px;height:44px;border-radius:50%;border:none;cursor:pointer;background:var(--g);color:#000;font-size:18px;display:flex;align-items:center;justify-content:center';}
   };
   sr.start();
 }
@@ -498,23 +509,7 @@ function similarity(a,b){
   }
   return 1-dp[al][bl]/Math.max(al,bl);
 }
-function similarity(a,b){
-  if(a===b) return 1;
-  if(a.length===0||b.length===0) return 0;
-  var la=a.toLowerCase(),lb=b.toLowerCase();
-  if(la===lb) return 1;
-  if(la.includes(lb)||lb.includes(la)) return 0.7;
-  var al=la.length,bl=lb.length;
-  var dp=[];
-  for(var i=0;i<=al;i++) dp[i]=[i];
-  for(var j=0;j<=bl;j++) dp[0][j]=j;
-  for(var i=1;i<=al;i++){
-    for(var j=1;j<=bl;j++){
-      dp[i][j]=Math.min(dp[i-1][j]+1,dp[i][j-1]+1,dp[i-1][j-1]+(la[i-1]===lb[j-1]?0:1));
-    }
-  }
-  return 1-dp[al][bl]/Math.max(al,bl);
-}
+
 
 function rp(){
   var words=gw(st.vDay);
