@@ -373,7 +373,7 @@ function rv(day){
     vd+='<div class="card" style="padding:14px"><div style="display:flex;align-items:flex-start;gap:12px"><div class="vn">'+(i+1)+'</div><div style="flex:1"><div style="font-size:17px;font-weight:800">'+ESC(v[1])+'</div><div style="font-size:11px;color:var(--g);margin:2px 0">'+ESC(v[2])+'</div><div style="font-size:13px;color:var(--tx2);margin-bottom:4px">'+ESC(v[3])+'</div>';
     if(v[4])vd+='<div style="font-size:12px;color:var(--tx);font-style:italic">'+ESC(v[4])+'</div>';
     if(v[5])vd+='<div style="font-size:11px;color:var(--tx2);margin-top:4px;padding:5px 8px;background:rgba(108,99,255,.07);border-left:3px solid var(--ac);border-radius:0 6px 6px 0">'+ESC(v[5])+'</div>';
-    vd+='</div></div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="vb2 tts" onclick="speak(\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">🔊 发音</button><button class="vb2 rc" onclick="openRecPanel(\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">🎤 跟读</button><button class="vb2 '+(done?'ldn':'btn')+'" onclick="toggleM('+v[0]+',\''+ESC(v[1]).replace(/'/g,"\\'")+',this\')">'+(done?'✅ 已掌握':'○ 标记掌握')+'</button></div></div>';
+    vd+='</div></div><div style="display:flex;gap:6px;margin-top:8px;flex-wrap:wrap"><button class="vb2 tts" onclick="speak(\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">🔊 发音</button><button class="vb2 rc" onclick="openRecPanel(\''+ESC(v[1]).replace(/'/g,"\\'")+'\')">🎤 跟读</button><button class="vb2 '+(done?'ldn':'btn')+'" onclick="toggleM('+v[0]+',\''+ESC(v[1]).replace(/'/g,"\\'")+'\',this)">'+(done?'✅ 已掌握':'○ 标记掌握')+'</button></div></div>';
   });
   $('vd').innerHTML=vd;
 }
