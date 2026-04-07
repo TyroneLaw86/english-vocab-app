@@ -413,7 +413,7 @@ function openRecPanel(word){
     '<button id="recBtn" onclick="toggleRec(\''+word.replace(/\'/g,"\\\'")+'\')" style="width:72px;height:72px;border-radius:50%;border:none;cursor:pointer;background:linear-gradient(135deg,var(--p),#ff4081);color:#fff;font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .2s">&#x1F3A4;</button>'+
     '<div id="rhint" style="font-size:12px;color:var(--tx2)">点击开始跟读</div>'+
     '<div id="rresult" style="text-align:center;min-height:24px;width:100%"></div>'+
-    '<button class="btn" onclick="toggleM(st.vDay,\'\''+word.replace(/\'/g,"\\\'")+'\'\',this)" id="rMarkBtn" style="margin-top:4px">&#x25CB; 标记掌握</button>'+
+    '<button class="btn" onclick="toggleM(st.vDay,\''+word.replace(/\'/g,"\\\'")+'\',this)" id="rMarkBtn" style="margin-top:4px">&#x25CB; 标记掌握</button>'+
     '<button class="btn s" onclick="closeRecPanel()" style="width:100%;margin-top:4px">&#x274C; 关闭</button>';
   panel.style.display='flex';
   panel.scrollIntoView({behavior:'smooth',block:'start'});
