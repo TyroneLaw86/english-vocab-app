@@ -383,7 +383,25 @@ function toggleM(day,word,btn){
   var v=lsp(k);
   lsp(k,v==='1'?null:'1');
   var d=lsp(k)==='1';
-  if(btn){if(d){btn.innerHTML='✅ 已掌握';btn.className='vb2 ldn'}else{btn.innerHTML='○ 标记掌握';btn.className='vb2 btn'};};;
+  var btnHtml=d?'✅ 已掌握':'○ 标记掌握';
+  var btnClass=d?'vb2 ldn':'vb2 btn';
+  if(btn){
+    btn.innerHTML=btnHtml;
+    btn.className=btnClass;
+  }
+  // 同步更新另一个位置的按钮
+  // 如果点击的是 openRecPanel 的按钮，更新词汇列表
+  var vocabBtn=document.querySelector('[onclick*="toggleM(\''+day+'\',\''+word.replace(/'/g,"\\'")+'\'"]');
+  if(vocabBtn && vocabBtn!==btn){
+    vocabBtn.innerHTML=btnHtml;
+    vocabBtn.className=btnClass;
+  }
+  // 如果点击的是词汇列表的按钮，更新 openRecPanel
+  var recBtn=document.getElementById('rMarkBtn');
+  if(recBtn && recBtn!==btn){
+    recBtn.innerHTML=btnHtml;
+    recBtn.className=btnClass;
+  }
   rh();
 }
 
